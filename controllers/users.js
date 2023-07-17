@@ -1,5 +1,4 @@
 /* eslint-disable no-unused-vars */
-
 const User = require('../models/user');
 const {
   OK,
@@ -18,7 +17,7 @@ module.exports.getUsers = (_, res) => {
 };
 
 module.exports.getUserById = (req, res) => {
-  User.findById(req.params._id)
+  User.findById(req.params.userId)
     .then((user) => {
       if (!user) {
         return res
@@ -27,9 +26,12 @@ module.exports.getUserById = (req, res) => {
       }
       return res.status(OK).send({ data: user });
     })
-    .catch((err) => res
-      .status(INTERNAL_SERVER_ERROR)
-      .send({ message: err.message }));
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        return res.status(BAD_REQUEST).send({ message: 'Переданы некорректные данные при запросе пользователя' });
+      }
+      return res.status(INTERNAL_SERVER_ERROR).send({ message: 'На сервере произошла ошибка' });
+    });
 };
 
 module.exports.createNewUser = (req, res) => {
@@ -55,13 +57,13 @@ module.exports.updateUser = (req, res) => {
   User.findByIdAndUpdate(
     req.user._id,
     { name, about },
-    { new: true, runValidators: true },
+    { new: true, runValidators: true }
   )
     .then((user) => {
       if (!user) {
         return res
           .status(NOT_FOUND)
-          .send({ message: 'Пользователь с указанным _id не найден' });
+          .send({ message: `Пользователь с указанным _id не найден ${req.user._id}` });
       }
       return res.status(OK).send({ data: user });
     })

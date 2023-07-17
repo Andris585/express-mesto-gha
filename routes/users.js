@@ -8,9 +8,9 @@ const {
 } = require('../controllers/users');
 
 usersRouter.get('/users', getUsers);
-usersRouter.get('/users/:user_Id', getUserById);
+usersRouter.get('/users/:userId', getUserById);
 usersRouter.post('/users', createNewUser);
-usersRouter.patch('users/me', updateUser);
-usersRouter.patch('users/me/avatar', updateUserAvatar);
+usersRouter.patch('/users/me', updateUser);
+usersRouter.patch('/users/me/avatar', updateUserAvatar);
 
 module.exports = usersRouter;
