@@ -57,13 +57,13 @@ module.exports.updateUser = (req, res) => {
   User.findByIdAndUpdate(
     req.user._id,
     { name, about },
-    { new: true, runValidators: true }
+    { new: true, runValidators: true },
   )
     .then((user) => {
       if (!user) {
         return res
           .status(NOT_FOUND)
-          .send({ message: `Пользователь с указанным _id не найден ${req.user._id}` });
+          .send({ message: 'Пользователь с указанным _id не найден' });
       }
       return res.status(OK).send({ data: user });
     })
