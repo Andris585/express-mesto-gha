@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 
 const usersRouter = require('./routes/users');
-// const { cardsRoutes } = require('./routes/cards');
+const cardsRouter = require('./routes/cards');
 
 const { PORT = 3000 } = process.env;
 
@@ -22,7 +22,7 @@ app.use((req, _res, next) => {
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(usersRouter);
-// app.use(cardsRoutes);
+app.use(cardsRouter);
 
 app.listen(PORT, () => {
   // eslint-disable-next-line no-console
