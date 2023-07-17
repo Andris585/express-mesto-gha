@@ -59,20 +59,20 @@ module.exports.addLike = (req, res) => {
   Card.findByIdAndUpdate(
     req.params.cardId,
     { $addToSet: { likes: req.user._id } },
-    { new: true }
+    { new: true },
   )
     .then((card) => {
       if (!card) {
         return res
           .status(NOT_FOUND)
-          .send({ message: "Передан несуществующий _id карточки" });
+          .send({ message: 'Передан несуществующий _id карточки' });
       }
       return res.status(CREATED).send({ data: card });
     })
     .catch((err) => {
-      if (err.name === "CastError") {
+      if (err.name === 'CastError') {
         return res.status(BAD_REQUEST).send({
-          message: "Переданы некорректные данные для постановки лайка",
+          message: 'Переданы некорректные данные для постановки лайка',
         });
       }
       return res.status(INTERNAL_SERVER_ERROR).send({ message: err.message });
@@ -83,21 +83,21 @@ module.exports.removeLike = (req, res) => {
   Card.findByIdAndUpdate(
     req.params.cardId,
     { $pull: { likes: req.user._id } },
-    { new: true }
+    { new: true },
   )
     .then((card) => {
       if (!card) {
         return res
           .status(NOT_FOUND)
-          .send({ message: "Передан несуществующий _id карточки" });
+          .send({ message: 'Передан несуществующий _id карточки' });
       }
       return res.status(OK).send({ data: card });
     })
     .catch((err) => {
-      if (err.name === "CastError") {
+      if (err.name === 'CastError') {
         return res
           .status(BAD_REQUEST)
-          .send({ message: "Переданы некорректные данные для снятия лайка" });
+          .send({ message: 'Переданы некорректные данные для снятия лайка' });
       }
       return res.status(INTERNAL_SERVER_ERROR).send({ message: err.message });
     });
