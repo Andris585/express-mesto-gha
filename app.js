@@ -23,8 +23,9 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(usersRouter);
 app.use(cardsRouter);
-app.get('/', (_req, res, next) => {
-  res.status(NOT_FOUND).send({ message: 'Запрашиваемая страница не найдена!' });
+app.use('*', (_req, res, next) => {
+  res.status(NOT_FOUND)
+    .send({ message: 'Запрашиваемая страница не найдена!' });
   next();
 });
 
