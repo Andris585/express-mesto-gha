@@ -1,9 +1,9 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
-
 const usersRouter = require('./routes/users');
 const cardsRouter = require('./routes/cards');
+const { NOT_FOUND } = require('./utils/errors');
 
 const { PORT = 3000 } = process.env;
 
@@ -23,6 +23,10 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(usersRouter);
 app.use(cardsRouter);
+app.get('/', (_req, res, next) => {
+  res.status(NOT_FOUND).send({ message: 'Запрашиваемая страница не найдена!' });
+  next();
+});
 
 app.listen(PORT, () => {
   // eslint-disable-next-line no-console
