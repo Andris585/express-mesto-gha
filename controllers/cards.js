@@ -25,22 +25,25 @@ module.exports.createCard = (req, res, next) => {
 };
 
 module.exports.deleteCard = (req, res, next) => {
-  Card.findByIdAndRemove(req.params.cardId)
+  Card.findById(req.params.cardId)
+    // eslint-disable-next-line consistent-return
     .then((card) => {
-      if (card.owner !== req.user._id) {
-        return next(new Forbidden('Нельзя удалять чужие посты'));
-      }
       if (!card) {
         return next(new NotFound('Карточка с указанным _id не найдена'));
       }
-      return res.status(OK).send({ data: card });
-    })
-    .catch((err) => {
-      if (err.name === 'CastError') {
-        return next(new BadRequest('Переданы некорректные данные при удалении карточки'));
+      if (card.owner.toString() !== req.user._id) {
+        return next(new Forbidden('Нельзя удалять чужие посты'));
       }
-      return next(err);
-    });
+      Card.findByIdAndRemove(req.params.cardId)
+        .then((user) => res.send({ data: user }))
+        .catch((err) => {
+          if (err.name === 'CastError') {
+            return next(new BadRequest('Переданы некорректные данные при удалении карточки'));
+          }
+          return next(err);
+        });
+    })
+    .catch(next);
 };
 
 module.exports.addLike = (req, res, next) => {
