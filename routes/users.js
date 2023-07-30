@@ -13,9 +13,9 @@ const {
 } = require('../utils/validation');
 
 usersRouter.get('/users', getUsers);
+usersRouter.get('/users/me', getUserById);
 usersRouter.get('/users/:userId', getUserByIdValidation, getUserById);
 usersRouter.patch('/users/me', updateUserValidation, updateUser);
 usersRouter.patch('/users/me/avatar', updateUserAvatarValidation, updateUserAvatar);
-usersRouter.get('/users/me', getUser);
 
 module.exports = usersRouter;
