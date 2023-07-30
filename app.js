@@ -12,7 +12,6 @@ const NotFound = require('./errors/NotFound');
 const errorHandler = require('./middlewares/errorHandler');
 const { loginValidation, createNewUserValidation } = require('./utils/validation');
 
-
 const { PORT = 3000 } = process.env;
 
 mongoose.connect('mongodb://localhost:27017/mestodb');
@@ -30,8 +29,8 @@ app.use(cardsRouter);
 app.use('*', () => {
   throw new NotFound('Запрашиваемая страница не найдена');
 });
-app.use(errorHandler);
 app.use(errors());
+app.use(errorHandler);
 app.listen(PORT, () => {
   // eslint-disable-next-line no-console
   console.log(`Прослушивается порт: ${PORT}`);
