@@ -17,7 +17,7 @@ module.exports.login = (req, res, next) => {
         expiresIn: '7d',
       });
 
-      res.cookie('token', token, { maxAge: 3600000, httpOnly: true }).status(OK).send('Вы авторизовались');
+      res.cookie('token', token, { maxAge: 3600000, httpOnly: true }).status(OK).send({ message: 'Вы авторизовались' });
     })
     .catch(next);
 };
@@ -56,7 +56,7 @@ module.exports.getUserById = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        return next(new BadRequest('Пользователь по указанному _id не найден'));
+        return next(new NotFound('Пользователь по указанному _id не найден'));
       }
       return next(err);
     });
