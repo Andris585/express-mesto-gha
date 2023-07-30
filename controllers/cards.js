@@ -3,6 +3,7 @@ const Card = require('../models/card');
 const { OK, CREATED } = require('../utils/errors');
 const BadRequest = require('../errors/BadRequest');
 const NotFound = require('../errors/NotFound');
+const Forbidden = require('../errors/Forbidden');
 
 module.exports.getCards = (_, res, next) => {
   Card.find({})
@@ -26,6 +27,9 @@ module.exports.createCard = (req, res, next) => {
 module.exports.deleteCard = (req, res, next) => {
   Card.findByIdAndRemove(req.params.cardId)
     .then((card) => {
+      if (card.owner !== req.user._id) {
+        return next(new Forbidden('Нельзя удалять чужие посты'));
+      }
       if (!card) {
         return next(new NotFound('Карточка с указанным _id не найдена'));
       }

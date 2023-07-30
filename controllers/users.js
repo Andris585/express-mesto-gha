@@ -22,6 +22,23 @@ module.exports.login = (req, res, next) => {
     .catch(next);
 };
 
+module.exports.getUser = (req, res, next) => {
+  User
+    .findById(req.user._id)
+    .then((user) => {
+      if (!user) {
+        throw new NotFound('Запрашиваемый пользователь не найден');
+      }
+      res.send({ data: user });
+    })
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        return next(new BadRequest('Переданы некорректные данные'));
+      }
+      return next(err);
+    });
+};
+
 module.exports.getUsers = (_, res, next) => {
   User.find({})
     .then((users) => res.status(OK).send({ data: users }))
@@ -29,7 +46,7 @@ module.exports.getUsers = (_, res, next) => {
 };
 
 module.exports.getUserById = (req, res, next) => {
-  User.findById(req.user._id)
+  User.findById(req.params.userId)
     .then((user) => {
       if (!user) {
         throw new NotFound('Пользователь по указанному _id не найден');
