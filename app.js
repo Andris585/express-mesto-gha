@@ -3,6 +3,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
+const { errors } = require('celebrate');
 const usersRouter = require('./routes/users');
 const cardsRouter = require('./routes/cards');
 const { login, createNewUser } = require('./controllers/users');
@@ -10,6 +11,7 @@ const { auth } = require('./middlewares/auth');
 const NotFound = require('./errors/NotFound');
 const errorHandler = require('./middlewares/errorHandler');
 const { loginValidation, createNewUserValidation } = require('./utils/validation');
+
 
 const { PORT = 3000 } = process.env;
 
@@ -29,6 +31,7 @@ app.use('*', () => {
   throw new NotFound('Запрашиваемая страница не найдена');
 });
 app.use(errorHandler);
+app.use(errors());
 app.listen(PORT, () => {
   // eslint-disable-next-line no-console
   console.log(`Прослушивается порт: ${PORT}`);
